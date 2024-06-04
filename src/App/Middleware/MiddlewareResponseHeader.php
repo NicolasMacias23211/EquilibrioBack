@@ -11,7 +11,6 @@ class MiddlewareResponseHeader
 {
     public function __invoke(Request $request,RequestHandler $handler) : Response
     {
-        $response = $handler->handle($request);
         $routeContext = RouteContext::fromRequest($request);
         $routingResults = $routeContext->getRoutingResults();
         $methods = $routingResults->getAllowedMethods();

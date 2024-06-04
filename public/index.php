@@ -5,6 +5,7 @@ use AppControllers\controllers\EmpleadosController;
 use AppControllers\controllers\AutenticacionController;
 use AppControllers\controllers\ServiciosController;
 use AppControllers\controllers\UsuariosController;
+use AppControllers\controllers\CitasController;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
 use Slim\Handlers\Strategies\RequestResponseArgs;
@@ -22,24 +23,25 @@ $errorMiddleware = $app->addErrorMiddleware(true,true,true);
 $errorHandle = $errorMiddleware->getDefaultErrorHandler();
 $errorHandle->forceContentType('application/json');
 $app->add(new MiddlewareResponseHeader);
-$app->options('/{routes:.+}', function ($request, $response) {
-    return $response;
-});
 $collector = $app->getRouteCollector();
 $app->addRoutingMiddleware();
 $collector->setDefaultInvocationStrategy(new RequestResponseArgs());
 
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+    return $response;
+});
 
 $app->get('/empleados', EmpleadosController::class.':AllEmpleados');
-
 $app->get('/empleados/{id:[0-9]+}', EmpleadosController::class.':EmpleadoByid')->add(App\Middleware\GetEmpleados::class);
-
 $app->post('/empleados',[EmpleadosController::class,'CreateEmpleado']);
-
 $app->post('/autenticacion', AutenticacionController::class.':validarCredenciales');
-
 $app->get('/servicios', ServiciosController::class.':getAllServices');
-
 $app->post('/createNewUser', UsuariosController::class.':ValidateAndInsertUser');
+$app->post('/CreateNewCita', CitasController::class.':CreateCita');
 
 $app->run();
+
+$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function($req, $res) {
+    $handler = $this->notFoundHandler; // handle using the default Slim page not found handler
+    return $handler($req, $res);
+});
