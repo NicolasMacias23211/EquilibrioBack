@@ -35,4 +35,12 @@ class CitasController
         $response->withStatus(500);
         return $response->withHeader('Content-Type','application/json');
     }
+
+    public function AllCitas(Request $request, Response $response):response
+    {
+        $data = $this->citasRepository->GetAllCitas();
+        $doby = json_encode($data);
+        $response->getBody()->write($doby);
+        return $response;
+    }
 }

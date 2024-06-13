@@ -92,5 +92,12 @@ class UsuariosRepository
         return $count > 0;
     }
 
+    public function GetAllUsers(): Array
+    {
+        $pdo = $this->dataBase->GetConnection();
+        $stmt = $pdo->query('select * from usuarios;');
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 }

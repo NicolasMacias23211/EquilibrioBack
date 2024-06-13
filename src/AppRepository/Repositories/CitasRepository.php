@@ -29,6 +29,31 @@ class CitasRepository
         }
     }
 
+    public function GetAllCitas(): Array
+    {
+        $pdo = $this->dataBase->GetConnection();
+        $stmt = $pdo->query(
+            "SELECT 
+            c.IdCita,
+            c.DireccionDeLaCita,
+            CONCAT(e.Nombre, ' ', e.PrimerApellido, ' ', e.SegundoApellido) AS NombreCompletoEmpleado,
+            CONCAT(u.Nombre, ' ', u.PrimerApellido, ' ', u.SegundoApellido) AS NombreCompletoUsuario,
+            s.Nombre AS NombreServicio,
+            esc.Estado AS EstadoDeCita
+        FROM 
+            citas c
+        JOIN 
+            empleados e ON c.IdEmpleado = e.IdEmpleado
+        JOIN 
+            usuarios u ON c.IdUsuario = u.IdUsuario
+        JOIN 
+            servicios s ON c.idServicio = s.idServicio
+        JOIN 
+            estadosxcitas esc ON c.IdEstadoDeCita = esc.IdEstadoDeCita;"
+        );
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
 
 

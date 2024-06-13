@@ -32,6 +32,8 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 });
 
 $app->get('/empleados', EmpleadosController::class.':AllEmpleados');
+$app->get('/users', UsuariosController::class.':AllUsers');
+$app->get('/citas', CitasController::class.':AllCitas');
 $app->get('/empleados/{id:[0-9]+}', EmpleadosController::class.':EmpleadoByid')->add(App\Middleware\GetEmpleados::class);
 $app->post('/empleados',[EmpleadosController::class,'CreateEmpleado']);
 $app->post('/autenticacion', AutenticacionController::class.':validarCredenciales');

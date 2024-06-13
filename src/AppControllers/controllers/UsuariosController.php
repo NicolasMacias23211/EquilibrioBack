@@ -97,4 +97,12 @@ class UsuariosController
             return $response->withStatus(500);
         }
     }
+
+    public function AllUsers(Request $request, Response $response):response
+    {
+        $data = $this->usuariosRepository->GetAllUsers();
+        $doby = json_encode($data);
+        $response->getBody()->write($doby);
+        return $response;
+    }
 }
