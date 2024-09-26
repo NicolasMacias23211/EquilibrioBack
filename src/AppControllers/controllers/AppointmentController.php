@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace AppControllers\controllers;
 
-use AppRepository\Repositories\CitasRepository;
+use AppRepository\Repositories\AppointmentRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class CitasController
+class AppointmentController
 {
-    public function __construct(private  CitasRepository $citasRepository){}
+    public function __construct(private  AppointmentRepository $citasRepository){}
 
     public function CreateCita(Request $request, Response $response):response
     {

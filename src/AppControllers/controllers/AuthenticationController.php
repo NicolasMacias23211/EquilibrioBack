@@ -2,13 +2,13 @@
 declare(strict_types=1);
 namespace AppControllers\controllers;
 
-use AppRepository\Repositories\AutenticacionRepository;
+use AppRepository\Repositories\AuthenticationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class AutenticacionController
+class AuthenticationController
 {
-    public function __construct(private AutenticacionRepository $AutenticacionRepository){}
+    public function __construct(private AuthenticationRepository $AutenticacionRepository){}
 
     public function validarCredenciales(Request $request, Response $response):response
     {

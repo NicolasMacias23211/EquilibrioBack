@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace AppRepository\Repositories;
 use App\DataBase;
 use PDO;
-class AutenticacionRepository
+class AuthenticationRepository
 {
     public function __construct(private DataBase $dataBase)
     {

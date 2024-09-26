@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-use AppControllers\controllers\EmpleadosController;
-use AppControllers\controllers\AutenticacionController;
-use AppControllers\controllers\ServiciosController;
-use AppControllers\controllers\UsuariosController;
-use AppControllers\controllers\CitasController;
+use AppControllers\controllers\EmployeesController;
+use AppControllers\controllers\AuthenticationController;
+use AppControllers\controllers\ServicesController;
+use AppControllers\controllers\UsersController;
+use AppControllers\controllers\AppointmentController;
+use Redoc\Redoc;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
 use Slim\Handlers\Strategies\RequestResponseArgs;
@@ -31,15 +32,18 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
 });
 
-$app->get('/empleados', EmpleadosController::class.':AllEmpleados');
-$app->get('/users', UsuariosController::class.':AllUsers');
-$app->get('/citas', CitasController::class.':AllCitas');
-$app->get('/empleados/{id:[0-9]+}', EmpleadosController::class.':EmpleadoByid')->add(App\Middleware\GetEmpleados::class);
-$app->post('/empleados',[EmpleadosController::class,'CreateEmpleado']);
-$app->post('/autenticacion', AutenticacionController::class.':validarCredenciales');
-$app->get('/servicios', ServiciosController::class.':getAllServices');
-$app->post('/createNewUser', UsuariosController::class.':ValidateAndInsertUser');
-$app->post('/CreateNewCita', CitasController::class.':CreateCita');
+$app->get('/empleados', EmployeesController::class.':AllEmpleados');
+$app->get('/users', UsersController::class.':AllUsers');
+$app->get('/citas', AppointmentController::class.':AllCitas');
+$app->get('/empleados/{id:[0-9]+}', EmployeesController::class.':EmpleadoByid');
+$app->post('/empleados',[EmployeesController::class,'CreateEmpleado']);
+$app->put('/empleados',[EmployeesController::class,'UploadEmpleado']);
+$app->post('/autenticacion', AuthenticationController::class.':validarCredenciales');
+$app->get('/servicios', ServicesController::class.':getAllServices');
+$app->post('/createNewUser', UsersController::class.':ValidateAndInsertUser');
+$app->post('/CreateNewCita', AppointmentController::class.':CreateCita');
+$app->get('/documentation', Redoc::class.':getDoc');
+$app->get('/', Redoc::class.':getDoc');
 
 $app->run();
 

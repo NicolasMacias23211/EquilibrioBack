@@ -4,7 +4,7 @@ namespace AppRepository\Repositories;
 
 use App\DataBase;
 use PDO;
-class ServiciosRepository
+class ServicesRepository
 {
     public function __construct(private DataBase $dataBase)
     {

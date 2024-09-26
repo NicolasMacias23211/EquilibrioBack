@@ -2,14 +2,14 @@
 declare(strict_types=1);
 namespace AppControllers\controllers;
 
-use AppRepository\Repositories\EmpleadosRepository;
+use AppRepository\Repositories\EmployeesRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Valitron\Validator;
 
-class EmpleadosController
+class EmployeesController
 {
-    public function __construct(private EmpleadosRepository $empleadosRepository,private Validator $validator)
+    public function __construct(private EmployeesRepository $EmployeesRepository , private Validator $validator)
     {
         $this->validator->mapFieldsRules([
             'nombre' => ['required'],
@@ -21,7 +21,7 @@ class EmpleadosController
     }
     public function AllEmpleados(Request $request, Response $response):response
     {
-        $data = $this->empleadosRepository->GetAllEmpleados();
+        $data = $this->EmployeesRepository->GetAllEmpleados();
         $doby = json_encode($data);
         $response->getBody()->write($doby);
         return $response;
@@ -42,7 +42,7 @@ class EmpleadosController
             $response->getBody()->write(json_encode($this->validator->errors()));
             return $response ->withStatus(422);
         }
-        $id = $this->empleadosRepository->Create($body);
+        $id = $this->EmployeesRepository->Create($body);
         $body = json_encode([
             'message' => 'Empleado registrdo exitosamente',
             'id' => $id
@@ -53,7 +53,19 @@ class EmpleadosController
     }
     public function UploadEmpleado(Request $request, Response $response):response
     {
-        return $response;
+        $body = $request->getParsedBody();
+        $data = $this->EmployeesRepository->GetEmpleadoById($body['IdEmpleado']);
+        $responseArray = json_decode($data, true);
+        if($responseArray['success']) {
+            $updateResult = $this->EmployeesRepository->UpdateEmployee($body);
+            $data = json_decode($updateResult, true);
+            if($data['success']) {
+                $response->getBody()->write($updateResult);
+                return $response->withStatus(200);
+            }
+        }
+        $response->getBody()->write(json_encode(['success' => false, 'Message' => 'Error actualizando el empleado']));
+        return $response->withStatus(500);
     }
 
 }
