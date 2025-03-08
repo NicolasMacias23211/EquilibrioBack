@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use AppControllers\controllers\EmployeesController;
+use AppControllers\controllers\membersController;
 use AppControllers\controllers\AuthenticationController;
 use AppControllers\controllers\ServicesController;
-use AppControllers\controllers\UsersController;
 use AppControllers\controllers\AppointmentController;
 use Redoc\Redoc;
 use Slim\Factory\AppFactory;
@@ -14,6 +13,10 @@ use App\Middleware\MiddlewareResponseHeader;
 
 define('App_rott',dirname(__DIR__));
 require App_rott.'/vendor/autoload.php';
+
+//Load environment variables
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 $builder = new ContainerBuilder;
 $cotainer = $builder->addDefinitions(App_rott.'/config/Definitions.php')->build();
@@ -32,15 +35,17 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
 });
 
-$app->get('/empleados', EmployeesController::class.':AllEmpleados');
-$app->get('/users', UsersController::class.':AllUsers');
+
+//Star to check the routes and the controllers
+$app->get('/professionals', membersController::class.':allProfessionals');
+$app->post('/CreateProfessional' ,membersController::class.':CreateProfessional');
+
+//not ready yet
 $app->get('/citas', AppointmentController::class.':AllCitas');
-$app->get('/empleados/{id:[0-9]+}', EmployeesController::class.':EmpleadoByid');
-$app->post('/empleados',[EmployeesController::class,'CreateEmpleado']);
-$app->put('/empleados',[EmployeesController::class,'UploadEmpleado']);
+$app->get('/empleados/{id:[0-9]+}', membersController::class.':EmpleadoByid');
+$app->put('/empleados',[membersController::class,'UploadEmpleado']);
 $app->post('/autenticacion', AuthenticationController::class.':validarCredenciales');
 $app->get('/servicios', ServicesController::class.':getAllServices');
-$app->post('/createNewUser', UsersController::class.':ValidateAndInsertUser');
 $app->post('/CreateNewCita', AppointmentController::class.':CreateCita');
 $app->get('/documentation', Redoc::class.':getDoc');
 $app->get('/', Redoc::class.':getDoc');

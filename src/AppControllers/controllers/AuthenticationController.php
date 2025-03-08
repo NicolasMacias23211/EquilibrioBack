@@ -6,6 +6,19 @@ use AppRepository\Repositories\AuthenticationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+//valdiar esto mas adelante cuando se este realizando el inicio de sesion
+// $inputPassword = "mi_contraseña_segura"; // La ingresada por el usuario
+// $storedHash = '$2y$10$....'; // Hash guardado en la base de datos
+
+// if (password_verify($inputPassword, $storedHash)) {
+//     echo "¡Contraseña correcta!";
+// } else {
+//     echo "Contraseña incorrecta.";
+// }
+
+
+
+
 class AuthenticationController
 {
     public function __construct(private AuthenticationRepository $AutenticacionRepository){}

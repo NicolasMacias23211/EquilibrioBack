@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 namespace AppRepository\Repositories;
-use App\DataBase;
+use App\databaseConnection\DataBase;
 use PDO;
 class AuthenticationRepository
 {

@@ -1,13 +1,13 @@
 <?php
-use App\DataBase;
+use App\databaseConnection\DataBase;
 
 return[
     DataBase::class => function () {
         return new DataBase(
-            host: '127.0.0.1', // para local 127.0.0.1
-            name: 'Equilibrio', //Equilibrio la vieja ahora es inhala para el commit
-            user: 'root',
-            password: 'admin'
+            host: $_ENV['HOST'],
+            name: $_ENV['NAME'], 
+            user: $_ENV['USER'],
+            password: $_ENV['PASSWORD']
         );
     }
 ];

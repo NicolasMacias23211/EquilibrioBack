@@ -6,12 +6,12 @@ servers:
   - url: http://localhost:8080
     description: Servidor local de desarrollo
 paths:
-  /empleados:
+  /professionals:
     get:
-      summary: Obtiene todos los empleados
+      summary: Obtiene todos los profesionales
       responses:
         '200':
-          description: Lista de empleados
+          description: Lista de profesionales
           content:
             application/json:
               schema:
@@ -19,7 +19,116 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    document:
                       type: integer
-                    nombre:
+                    name:
                       type: string
+                    lastName:
+                      type: string
+                    mail:
+                      type: string
+                    phone:
+                      type: integer
+                    photo:
+                      type: string
+                    fieldsOfStudy:
+                      type: string
+    post:
+      summary: Crea un nuevo profesional
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                document:
+                  type: integer
+                name:
+                  type: string
+                secondName:
+                  type: string
+                lastName:
+                  type: string
+                secondLastName:
+                  type: string
+                birthdate:
+                  type: string
+                  format: date
+                gender:
+                  type: string
+                mail:
+                  type: string
+                phone:
+                  type: integer
+                address:
+                  type: string
+                occupation:
+                  type: string
+                RH:
+                  type: string
+                photo:
+                  type: string
+                userName:
+                  type: string
+                password:
+                  type: string
+                userType:
+                  type: string
+                memberStatus:
+                  type: string
+                anamnesisID:
+                  type: integer
+                roles_roleID:
+                  type: integer
+                schedule_scheduleId:
+                  type: integer
+                roleName:
+                  type: string
+                nameFieldStudy:
+                  type: string
+                dayName:
+                  type: string
+                agenda:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      startTime:
+                        type: string
+                        format: time
+                      endTime:
+                        type: string
+                        format: time
+                      available:
+                        type: boolean
+                services:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      serviceID:
+                        type: integer
+                      servicePackagesID:
+                        type: integer
+      responses:
+        '201':
+          description: Profesional creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: integer
+        '422':
+          description: Error de validación
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
