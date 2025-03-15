@@ -16,64 +16,91 @@ class daysRepository
 
     public function createDay(array $data): string
     {
-        $sql = 'INSERT INTO days (
-            dayName
-        ) VALUES (
-            :dayName
-        )';
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':dayName', $data['dayName'], PDO::PARAM_STR);
-        $stmt->execute();
-        return json_encode(['success' => true, 'Message' => 'Dia creado correctamente']);
+        try {
+            $sql = 'INSERT INTO days (
+                dayName
+            ) VALUES (
+                :dayName
+            )';
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':dayName', $data['dayName'], PDO::PARAM_STR);
+            $stmt->execute();
+            return json_encode(['success' => true, 'Message' => 'Dia creado correctamente']);
+        } catch (\Throwable $th) {
+            error_log("Error creando dia: " . $th->getMessage());
+            return json_encode(['success' => false, 'Message' => 'Error creando dia']);
+        }
     }
 
     public function getAllDays(): array
     {
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare('SELECT * FROM days');
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare('SELECT * FROM days');
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $th) {
+            return ['error' => $th->getMessage()];
+        }
     }
 
     public function getDayByName(string $dayName): array
     {
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare('SELECT * FROM days WHERE dayName = :dayName');
-        $stmt->bindValue(':dayName', $dayName, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare('SELECT * FROM days WHERE dayName = :dayName');
+            $stmt->bindValue(':dayName', $dayName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $th) {
+            return ['error' => $th->getMessage()];
+        }
     }
 
     public function getDayById(int $dayId): array
     {
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare('SELECT * FROM days WHERE dayID = :dayID');
-        $stmt->bindValue(':dayID', $dayId, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare('SELECT * FROM days WHERE dayID = :dayID');
+            $stmt->bindValue(':dayID', $dayId, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $th) {
+            return ['error' => $th->getMessage()];
+        }
     }
 
     public function updateDay(array $data): string
     {
-        $sql = 'UPDATE days SET
+        try {
+            $sql = 'UPDATE days SET
             dayName = :dayName
             WHERE dayID = :dayID';
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':dayName', $data['dayName'], PDO::PARAM_STR);
-        $stmt->bindValue(':dayID', $data['dayID'], PDO::PARAM_INT);
-        $stmt->execute();
-        return json_encode(['success' => true, 'Message' => 'Dia actualizado correctamente']);
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':dayName', $data['dayName'], PDO::PARAM_STR);
+            $stmt->bindValue(':dayID', $data['dayID'], PDO::PARAM_INT);
+            $stmt->execute();
+            return json_encode(['success' => true, 'Message' => 'Dia actualizado correctamente']);
+        } catch (\Throwable $th) {
+            error_log("Error actualizando dia: " . $th->getMessage());
+            return json_encode(['success' => false, 'Message' => 'Error actualizando dia']);
+        }
     }
 
     public function deleteDay(int $dayId): string
     {
-        $sql = 'DELETE FROM days WHERE dayID = :dayID';
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':dayID', $dayId, PDO::PARAM_INT);
-        $stmt->execute();
-        return json_encode(['success' => true, 'Message' => 'Dia eliminado correctamente']);
+        try {
+            $sql = 'DELETE FROM days WHERE dayID = :dayID';
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':dayID', $dayId, PDO::PARAM_INT);
+            $stmt->execute();
+            return json_encode(['success' => true, 'Message' => 'Dia eliminado correctamente']);
+        } catch (\Throwable $th) {
+            error_log("Error eliminando dia: " . $th->getMessage());
+            return json_encode(['success' => false, 'Message' => 'Error eliminando dia']);
+        }
     }
 }

@@ -16,46 +16,62 @@ class fieldOfStudyRepository
 
     public function createFieldOfStudy(array $data): string
     {
-        $sql = 'INSERT INTO fieldOfStudy (
-            nameFieldStudy,
-            description
-        ) VALUES (
-            :nameFieldStudy,
-            ;description
-        )';
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':nameFieldStudy', $data['nameFieldStudy'], PDO::PARAM_STR);
-        $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
-        $stmt->execute();
-        return json_encode(['success' => true, 'Message' => 'Campo de estudio creado correctamente']);
+        try {
+            $sql = 'INSERT INTO fieldOfStudy (
+                nameFieldStudy,
+                description
+            ) VALUES (
+                :nameFieldStudy,
+                ;description
+            )';
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':nameFieldStudy', $data['nameFieldStudy'], PDO::PARAM_STR);
+            $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
+            $stmt->execute();
+            return json_encode(['success' => true, 'Message' => 'Campo de estudio creado correctamente']);
+        } catch (\Throwable $th) {
+            error_log("Error creando campo de estudio: " . $th->getMessage());
+            return json_encode(['success' => false, 'Message' => 'Error creando campo de estudio']);
+        }
     }
 
-    public function getFieldOfStudyByName(String $nameFieldStudy): string
+    public function getFieldOfStudyByName(string $nameFieldStudy): array
     {
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->query("
-        SELECT 
-            fieldOfStudyID
-        FROM fieldOfStudy
-        WHERE nameFieldStudy = ':nameFieldStudy'");
-        $stmt->bindValue(':nameFieldStudy', $nameFieldStudy, PDO::PARAM_STR);
-        return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC)); 
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare("
+                SELECT 
+                    fieldOfStudyID
+                FROM fieldOfStudy
+                WHERE nameFieldStudy = :nameFieldStudy
+            ");
+            $stmt->bindValue(':nameFieldStudy', $nameFieldStudy, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $th) {
+            return ['error' => $th->getMessage()];
+        }
     }
 
     public function editFieldOfStudy(array $data): string
     {
-        $sql = 'UPDATE fieldOfStudy SET
+        try {
+            $sql = 'UPDATE fieldOfStudy SET
             nameFieldStudy = :nameFieldStudy,
             description = :description
-        WHERE fieldOfStudyID = :fieldOfStudyID';
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':nameFieldStudy', $data['nameFieldStudy'], PDO::PARAM_STR);
-        $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
-        $stmt->bindValue(':fieldOfStudyID', $data['fieldOfStudyID'], PDO::PARAM_INT);
-        $stmt->execute();
-        return json_encode(['success' => true, 'Message' => 'Campo de estudio actualizado correctamente']);
+            WHERE fieldOfStudyID = :fieldOfStudyID';
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':nameFieldStudy', $data['nameFieldStudy'], PDO::PARAM_STR);
+            $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
+            $stmt->bindValue(':fieldOfStudyID', $data['fieldOfStudyID'], PDO::PARAM_INT);
+            $stmt->execute();
+            return json_encode(['success' => true, 'Message' => 'Campo de estudio actualizado correctamente']);
+        } catch (\Throwable $th) {
+            error_log("Error actualizando campo de estudio: " . $th->getMessage());
+            return json_encode(['success' => false, 'Message' => 'Error actualizando campo de estudio']);
+        }
     }
 
 

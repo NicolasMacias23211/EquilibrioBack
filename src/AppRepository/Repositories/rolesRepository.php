@@ -28,5 +28,51 @@ class RolesRepository
         }
     }
 
+    public function getRoleById(int $id):string
+    {
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $sql = 'SELECT 
+                        r.roleID, 
+                        r.roleName
+                    FROM roles r
+                    WHERE r.roleID = :id';
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            $role = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($role) {
+                return json_encode(['success' => true, 'data' => $role]);
+            } else {
+                return json_encode(['success' => false, 'Message' => 'Rol no encontrado']);
+            }
+        } catch (\Throwable $th) {
+            return json_encode(['success' => false, 'Message' => 'Error consultando el rol', 'log' => $th->getMessage()]);
+        }
+    }
+
+    public function getRoleByName(string $name):array
+    {
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $sql = 'SELECT 
+                        r.roleID, 
+                        r.roleName
+                    FROM roles r
+                    WHERE r.roleName = :name';
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':name', $name, PDO::PARAM_STR);
+            $stmt->execute();
+            $role = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($role) {
+                return ['success' => true, 'data' => $role];
+            } else {
+                return ['success' => false, 'Message' => 'Rol no encontrado'];
+            }
+        } catch (\Throwable $th) {
+            return ['success' => false, 'Message' => 'Error consultando el rol', 'log' => $th->getMessage()];
+        }
+    }
+
 
 }

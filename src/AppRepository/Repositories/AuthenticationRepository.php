@@ -10,18 +10,21 @@ class AuthenticationRepository
     {
     }
 
-    public function GetAutentication(String $usuario, String $contraseña): ?int
+    public function GetAutentication(String $usuario): ?string
     {
-        $pdo = $this->dataBase->GetConnection();
-        $sql = 'SELECT Usuarios_idUsuario FROM credenciales WHERE Username = ? AND Contraseña = ?';
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':email', $usuario, PDO::PARAM_STR);
-        $stmt->bindValue(':contraseña', $contraseña, PDO::PARAM_STR);
-        $stmt->execute([$usuario,$contraseña]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($result) {
-            return (int) $result['Usuarios_idUsuario'];
-        } else {
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $sql = 'SELECT userName,password FROM members WHERE userName = :userName';
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':userName', $usuario, PDO::PARAM_STR);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result) {
+                return  $result['password'];
+            } else {
+                return null;
+            }
+        } catch (\Throwable $th) {
             return null;
         }
     }

@@ -37,18 +37,14 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 
 
 //Star to check the routes and the controllers
-$app->get('/professionals', membersController::class.':allProfessionals');
-$app->post('/CreateProfessional' ,membersController::class.':CreateProfessional');
-
-//not ready yet
-$app->get('/citas', AppointmentController::class.':AllCitas');
-$app->get('/empleados/{id:[0-9]+}', membersController::class.':EmpleadoByid');
-$app->put('/empleados',[membersController::class,'UploadEmpleado']);
-$app->post('/autenticacion', AuthenticationController::class.':validarCredenciales');
-$app->get('/servicios', ServicesController::class.':getAllServices');
-$app->post('/CreateNewCita', AppointmentController::class.':CreateCita');
 $app->get('/documentation', Redoc::class.':getDoc');
 $app->get('/', Redoc::class.':getDoc');
+$app->get('/professionals', membersController::class.':allProfessionals');
+$app->post('/createProfessional' ,membersController::class.':CreateProfessional');
+$app->post('/autenticacion', AuthenticationController::class.':validarCredenciales');
+$app->post('/createMember', membersController::class.':createNewMember');
+$app->get('/servicios', ServicesController::class.':getAllServices');
+
 
 $app->run();
 

@@ -170,7 +170,7 @@ CREATE TABLE IF NOT EXISTS `inhala`.`members` (
   `secondLastName` VARCHAR(45) NULL,
   `birthdate` DATE NOT NULL,
   `gender` VARCHAR(10) NOT NULL,
-  `mail` VARCHAR(45) NOT NULL,
+  `mail` VARCHAR(45) NOT NULL UNIQUE,
   `phone` BIGINT NOT NULL,
   `address` VARCHAR(50) NOT NULL,
   `occupation` VARCHAR(50) NULL,

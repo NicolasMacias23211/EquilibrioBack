@@ -14,23 +14,27 @@ class membersRepository
 
     public function GetAllprofessionals(): array
     {
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->query("
-        SELECT 
-            m.document, 
-            m.name, 
-            m.lastName, 
-            m.mail, 
-            m.phone, 
-            m.photo,
-            GROUP_CONCAT(fs.nameFieldStudy SEPARATOR ', ') AS fieldsOfStudy
-        FROM members m
-        LEFT JOIN membersFieldsOfStudy mfs ON m.document = mfs.members_document
-        LEFT JOIN fieldOfStudy fs ON mfs.fieldOfStudy_fieldOfStudyID = fs.fieldOfStudyID
-        WHERE m.userType = 'professional' 
-        AND m.memberStatus = 'E'
-        GROUP BY m.document");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->query("
+            SELECT 
+                m.document, 
+                m.name, 
+                m.lastName, 
+                m.mail, 
+                m.phone, 
+                m.photo,
+                GROUP_CONCAT(fs.nameFieldStudy SEPARATOR ', ') AS fieldsOfStudy
+            FROM members m
+            LEFT JOIN membersFieldsOfStudy mfs ON m.document = mfs.members_document
+            LEFT JOIN fieldOfStudy fs ON mfs.fieldOfStudy_fieldOfStudyID = fs.fieldOfStudyID
+            WHERE m.userType = 'professional' 
+            AND m.memberStatus = 'E'
+            GROUP BY m.document");
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $th) {
+            return ['error' => $th->getMessage()];
+        }
     }
 
     public function GetEmpleadoById(int $id): string
@@ -48,79 +52,84 @@ class membersRepository
                 return json_encode(['success' => false, 'Message' => 'Empleado no encontrado']);
             }
         } catch (PDOException $e) {
-            //error_log("Error consultando el empleado: " . $id . " - " . $e->getMessage());
+            error_log("Error consultando el empleado: " . $id . " - " . $e->getMessage());
             return json_encode(['success' => false, 'Message' => 'Error consultando el empleado']);
         }
     }
 
-    public function createMembers(array $data) :string
+    public function createMembers(array $data): array
     {
-        $sql = 'INSERT INTO members (
-            document, 
-            name, 
-            secondName, 
-            lastName, 
-            secondLastName, 
-            birthdate, 
-            gender, 
-            mail, 
-            phone, 
-            address, 
-            occupation, 
-            RH, 
-            photo, 
-            userName, 
-            password, 
-            userType, 
-            memberStatus, 
-            anamnesisID, 
-            roles_roleID 
-        ) VALUES (
-            :document, 
-            :name, 
-            :secondName, 
-            :lastName, 
-            :secondLastName, 
-            :birthdate, 
-            :gender, 
-            :mail, 
-            :phone, 
-            :address, 
-            :occupation, 
-            :RH, 
-            :photo, 
-            :userName, 
-            :password, 
-            :userType, 
-            :memberStatus, 
-            :anamnesisID, 
-            :roles_roleID 
-        )';
-        
-        $pdo = $this->dataBase->GetConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(':document', $data['document'], PDO::PARAM_INT);
-        $stmt->bindValue(':name', $data['name'], PDO::PARAM_STR);
-        $stmt->bindValue(':secondName', $data['secondName'] ?? null, PDO::PARAM_STR);
-        $stmt->bindValue(':lastName', $data['lastName'], PDO::PARAM_STR);
-        $stmt->bindValue(':secondLastName', $data['secondLastName'] ?? null, PDO::PARAM_STR);
-        $stmt->bindValue(':birthdate', $data['birthdate'], PDO::PARAM_STR);
-        $stmt->bindValue(':gender', $data['gender'], PDO::PARAM_STR);
-        $stmt->bindValue(':mail', $data['mail'], PDO::PARAM_STR);
-        $stmt->bindValue(':phone', $data['phone'], PDO::PARAM_INT);
-        $stmt->bindValue(':address', $data['address'], PDO::PARAM_STR);
-        $stmt->bindValue(':occupation', $data['occupation']?? null, PDO::PARAM_STR);
-        $stmt->bindValue(':RH', $data['RH'], PDO::PARAM_STR);
-        $stmt->bindValue(':photo', $data['photo'] ?? null, PDO::PARAM_STR);
-        $stmt->bindValue(':userName', $data['userName'], PDO::PARAM_STR);
-        $stmt->bindValue(':password', $data['password'], PDO::PARAM_STR);
-        $stmt->bindValue(':userType', $data['userType'], PDO::PARAM_STR);
-        $stmt->bindValue(':memberStatus', $data['memberStatus'], PDO::PARAM_STR);
-        $stmt->bindValue(':anamnesisID', $data['anamnesisID'] ?? null, PDO::PARAM_INT);
-        $stmt->bindValue(':roles_roleID', $data['roles_roleID'], PDO::PARAM_INT);
-        
-        $stmt->execute();
-        return $pdo->lastInsertId();
+        try {
+            $sql = 'INSERT INTO members (
+                document, 
+                name, 
+                secondName, 
+                lastName, 
+                secondLastName, 
+                birthdate, 
+                gender, 
+                mail, 
+                phone, 
+                address, 
+                occupation, 
+                RH, 
+                photo, 
+                userName, 
+                password, 
+                userType, 
+                memberStatus, 
+                anamnesisID, 
+                roles_roleID
+            ) VALUES (
+                :document, 
+                :name, 
+                :secondName, 
+                :lastName, 
+                :secondLastName, 
+                :birthdate, 
+                :gender, 
+                :mail, 
+                :phone, 
+                :address, 
+                :occupation, 
+                :RH, 
+                :photo, 
+                :userName, 
+                :password, 
+                :userType, 
+                :memberStatus, 
+                :anamnesisID, 
+                :roles_roleID
+            )';
+            
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':document', $data['documento'], PDO::PARAM_INT);
+            $stmt->bindValue(':name', $data['nombre'], PDO::PARAM_STR);
+            $stmt->bindValue(':secondName', $data['segundoNombre'] ?? null, PDO::PARAM_STR);
+            $stmt->bindValue(':lastName', $data['primerApellido'], PDO::PARAM_STR);
+            $stmt->bindValue(':secondLastName', $data['segundoApellido'] ?? null, PDO::PARAM_STR);
+            $stmt->bindValue(':birthdate', $data['fechaNacimiento'], PDO::PARAM_STR);
+            $stmt->bindValue(':gender', $data['sexo'], PDO::PARAM_STR);
+            $stmt->bindValue(':mail', $data['correoElectronico'], PDO::PARAM_STR);
+            $stmt->bindValue(':phone', $data['telefono'], PDO::PARAM_INT);
+            $stmt->bindValue(':address', $data['direccion'], PDO::PARAM_STR);
+            $stmt->bindValue(':occupation', $data['ocupacion'] ?? null, PDO::PARAM_STR);
+            $stmt->bindValue(':RH', $data['rh'], PDO::PARAM_STR);
+            $stmt->bindValue(':photo', $data['photo'] ?? null, PDO::PARAM_STR);
+            $stmt->bindValue(':userName', $data['userName'], PDO::PARAM_STR);
+            $stmt->bindValue(':password', $data['password'], PDO::PARAM_STR);
+            $stmt->bindValue(':userType', $data['userType'], PDO::PARAM_STR);
+            $stmt->bindValue(':memberStatus', $data['memberStatus'], PDO::PARAM_STR);
+            $stmt->bindValue(':anamnesisID', $data['anamnesisID'] ?? null, PDO::PARAM_INT);
+            $stmt->bindValue(':roles_roleID', $data['roles_roleID'], PDO::PARAM_INT);
+            
+            $stmt->execute();
+            return ['success' => true, 'id' => $data['documento']];
+        } catch (PDOException $e) {
+            error_log("Error creating member: " . $e->getMessage());
+            return ['success' => false, 'message' => 'Error creating member'];
+        }
     }
 
 

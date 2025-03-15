@@ -6,18 +6,6 @@ use AppRepository\Repositories\AuthenticationRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-//valdiar esto mas adelante cuando se este realizando el inicio de sesion
-// $inputPassword = "mi_contraseña_segura"; // La ingresada por el usuario
-// $storedHash = '$2y$10$....'; // Hash guardado en la base de datos
-
-// if (password_verify($inputPassword, $storedHash)) {
-//     echo "¡Contraseña correcta!";
-// } else {
-//     echo "Contraseña incorrecta.";
-// }
-
-
-
 
 class AuthenticationController
 {
@@ -26,8 +14,8 @@ class AuthenticationController
     public function validarCredenciales(Request $request, Response $response):response
     {
         $body = $request->getParsedBody();
-        $usuario = $body['email'];
-        $contraseña = $body['contraseña'];
+        $usuario = $body['username'];
+        $contraseña = $body['password'];
         if ($contraseña == null || empty($contraseña)){
             $response->getBody()->write(json_encode("Error no llego la contraseña"));
             return $response ->withStatus(422);
@@ -36,19 +24,18 @@ class AuthenticationController
             $response->getBody()->write(json_encode("Error no llego el usuario"));
             return $response ->withStatus(422);
         }
-        $data = $this->AutenticacionRepository->GetAutentication($usuario,$contraseña);
-        if ($data != null && !empty($data)){
-            $body = json_encode([
-                'message' => 'Usuario y contraseña correctos',
-                'id' => $data
-            ]);
-            $body = json_encode($body);
-            $response->getBody()->write($body);
-            return $response->withHeader('Content-Type','application/json');
-        }else{
-            $response->getBody()->write(json_encode(['message' => 'Error no se encontro un usuario registrado con las credenciales',
-            'id' => 0]));
-            return $response ->withStatus(422);
+        $password = $this->AutenticacionRepository->GetAutentication($usuario,$contraseña);
+
+        if ($password == null) {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'Usuario no encontrado']));
+            return $response->withStatus(404);
+        }
+        if (password_verify($contraseña, $password)) {
+            $response->getBody()->write(json_encode(['success' => true, 'message' => 'Autenticación exitosa']));
+            return $response->withStatus(200);
+        } else {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'Contraseña incorrecta']));
+            return $response->withStatus(401);
         }
     }
 

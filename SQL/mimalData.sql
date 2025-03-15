@@ -24,7 +24,7 @@ INSERT INTO `inhala`.`appointmentStatus` (`status`, `description`) VALUES
 
 INSERT INTO `inhala`.`roles` (`roleName`) VALUES
 ('Admin'),
-('Miembro'),
+('profesional'),
 ('member');
 
 
