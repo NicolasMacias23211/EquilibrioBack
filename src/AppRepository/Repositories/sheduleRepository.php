@@ -50,13 +50,7 @@ class sheduleRepository
     {
         try {
             $pdo = $this->dataBase->GetConnection();
-            $stmt = $pdo->prepare("
-            SELECT 
-                d.dayName
-            FROM members m
-            LEFT JOIN shedule s ON m.document = s.members_document
-            LEFT JOIN days d ON s.day_dayID = d.dayID
-            WHERE m.document = :document");
+            $stmt = $pdo->prepare("SELECT * FROM schedule WHERE member_document = :document AND available = 1");
             $stmt->bindValue(':document', $document, PDO::PARAM_STR);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);

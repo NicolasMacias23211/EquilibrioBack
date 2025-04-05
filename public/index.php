@@ -4,7 +4,7 @@ declare(strict_types=1);
 use AppControllers\controllers\membersController;
 use AppControllers\controllers\AuthenticationController;
 use AppControllers\controllers\ServicesController;
-use AppControllers\controllers\AppointmentController;
+use AppControllers\controllers\ScheduleController;
 use Redoc\Redoc;
 use Slim\Factory\AppFactory;
 use DI\ContainerBuilder;
@@ -36,7 +36,6 @@ $app->options('/{routes:.+}', function ($request, $response, $args) {
 });
 
 
-//Star to check the routes and the controllers
 $app->get('/documentation', Redoc::class.':getDoc');
 $app->get('/', Redoc::class.':getDoc');
 $app->get('/professionals', membersController::class.':allProfessionals');
@@ -44,7 +43,7 @@ $app->post('/createProfessional' ,membersController::class.':CreateProfessional'
 $app->post('/autenticacion', AuthenticationController::class.':validarCredenciales');
 $app->post('/createMember', membersController::class.':createNewMember');
 $app->get('/servicios', ServicesController::class.':getAllServices');
-
+$app->get('/schedule/{document}', [ScheduleController::class, 'getScheduleByPerson']);
 
 $app->run();
 
