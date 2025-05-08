@@ -24,6 +24,7 @@ class ServicesRepository
                     s.cost,
                     s.duration,
                     s.uniqueService,
+                    s.image,
                     f.nameFieldStudy
                 FROM 
                     services s

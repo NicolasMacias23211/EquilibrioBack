@@ -114,6 +114,7 @@ CREATE TABLE IF NOT EXISTS `inhala`.`services` (
   `duration` TIME NOT NULL,
   `uniqueService` TINYINT NOT NULL DEFAULT 0,
   `fieldOfStudyID` INT NOT NULL,
+  `image` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`serviceID`),
   UNIQUE INDEX `Nombre_UNIQUE` (`serviceName` ASC) VISIBLE,
   INDEX `fk_services_fieldOfStudy1_idx` (`fieldOfStudyID` ASC) VISIBLE,
@@ -121,8 +122,8 @@ CREATE TABLE IF NOT EXISTS `inhala`.`services` (
     FOREIGN KEY (`fieldOfStudyID`)
     REFERENCES `inhala`.`fieldOfStudy` (`fieldOfStudyID`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB
 AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
