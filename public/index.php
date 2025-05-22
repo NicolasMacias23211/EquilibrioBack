@@ -40,6 +40,7 @@ $app->get('/documentation', Redoc::class.':getDoc');
 $app->get('/', Redoc::class.':getDoc');
 $app->get('/professionals', membersController::class.':allProfessionals');
 $app->post('/createProfessional' ,membersController::class.':CreateProfessional');
+$app->get('/members/{document}', membersController::class.':getMemberByDocument');
 $app->post('/autenticacion', AuthenticationController::class.':validarCredenciales');
 $app->post('/createMember', membersController::class.':createNewMember');
 $app->get('/servicios', ServicesController::class.':getAllServices');

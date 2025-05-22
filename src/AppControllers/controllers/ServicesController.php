@@ -14,7 +14,9 @@ class ServicesController
     
     public function getAllServices(Request $request, Response $response):response
     {
-        $data = $this->ServiciosRepository->getAllServices();
+        $params = $request->getQueryParams();
+        $profesionalDocument = isset($params['profesionalId']) ? (int)$params['profesionalId'] : null;
+        $data = $this->ServiciosRepository->getAllServices($profesionalDocument);
         $doby = json_encode($data);
         $response->getBody()->write($doby);
         return $response;

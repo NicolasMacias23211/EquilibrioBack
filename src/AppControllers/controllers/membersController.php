@@ -32,7 +32,9 @@ class membersController
 
     public function allProfessionals(Request $request, Response $response):response
     {
-        $data = $this->membersRepository->GetAllprofessionals();
+        $params = $request->getQueryParams();
+        $serviceID = isset($params['serviceID']) ? (int)$params['serviceID'] : null;
+        $data = $this->membersRepository->GetAllprofessionals($serviceID);
         $doby = json_encode($data);
         $response->getBody()->write($doby);
         return $response;
@@ -135,7 +137,7 @@ class membersController
         if (array_key_exists('roleName', $body) && $body['roleName'] != null) {
            $rol = $this->rolesRepository->getRoleByName($body['roleName']);
         } else {
-            $rol = $this->rolesRepository->getRoleByName('Miembro');
+            $rol = $this->rolesRepository->getRoleByName('member');
         }
 
         if (!$rol['success']) {
@@ -165,6 +167,7 @@ class membersController
         $id = $Ismemberinserted['id'];
         $body = json_encode([
             'message' => 'mienbro registrdo exitosamente',
+            'success' => true,
             'id' => $id
         ]);
 
@@ -173,6 +176,13 @@ class membersController
 
     }
 
+
+    public function getMemberByDocument(Request $request, Response $response, string $document): response
+    {
+        $member = $this->membersRepository->getMemberByDocument($document);
+        $response->getBody()->write(json_encode($member));
+        return $response;
+    }
 
     /**
      * Este valdiador se encarga de validar los campos requeridos para la creación de un profesional
@@ -198,8 +208,8 @@ class membersController
             'direccion' => ['required'],
             'ocupacion' => ['required'],
             'rh' => ['required'],
-            'username' => ['required'],
-            'contrasena' => ['required'],
+            'userName' => ['required'],
+            'password' => ['required'],
         ]);
         return $validator;
     }

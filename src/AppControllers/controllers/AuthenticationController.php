@@ -16,21 +16,17 @@ class AuthenticationController
     public function validarCredenciales(Request $request, Response $response):response
     {
         $body = $request->getParsedBody();
-        $validator = $this->validateLogin($body);
-        if (!$validator->validate()){
-            $response->getBody()->write(json_encode($validator->errors()));
-            return $response ->withStatus(422);
+
+        if (!isset($body['userName']) || empty($body['userName'])) {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => "Error no llego el usuario"]));
+            return $response->withStatus(422);
+        }
+        if (!isset($body['password']) || empty($body['password'])) {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => "Error no llego la contraseña"]));
+            return $response->withStatus(422);
         }
         $usuario = $body['userName'];
         $contraseña = $body['password'];
-        if ($contraseña == null || empty($contraseña)){
-            $response->getBody()->write(json_encode("Error no llego la contraseña"));
-            return $response ->withStatus(422);
-        }
-        if ($usuario == null || empty($usuario)){
-            $response->getBody()->write(json_encode("Error no llego el usuario"));
-            return $response ->withStatus(422);
-        }
         $password = $this->AutenticacionRepository->GetAutentication($usuario,$contraseña);
 
         if ($password === null || !isset($password['password'])) {
@@ -46,16 +42,6 @@ class AuthenticationController
             return $response->withStatus(401);
         }
     }
-
-    private function validateLogin(array $data): Validator
-    {
-        $validator = new Validator($data);
-        $validator->mapFieldsRules([
-            'userName' => ['required'],
-            'password' => ['required'],
-        ]);
-        return $validator;
-    }   
 
 
 

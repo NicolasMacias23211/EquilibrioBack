@@ -12,25 +12,47 @@ class membersRepository
     {
     }
 
-    public function GetAllprofessionals(): array
+    public function GetAllprofessionals(?int $serviceID = null): array
     {
         try {
             $pdo = $this->dataBase->GetConnection();
-            $stmt = $pdo->query("
-            SELECT 
-                m.document, 
-                m.name, 
-                m.lastName, 
-                m.mail, 
-                m.phone, 
-                m.photo,
-                GROUP_CONCAT(fs.nameFieldStudy SEPARATOR ', ') AS fieldsOfStudy
-            FROM members m
-            LEFT JOIN membersFieldsOfStudy mfs ON m.document = mfs.members_document
-            LEFT JOIN fieldOfStudy fs ON mfs.fieldOfStudy_fieldOfStudyID = fs.fieldOfStudyID
-            WHERE m.userType = 'professional' 
-            AND m.memberStatus = 'E'
-            GROUP BY m.document");
+
+            $sql = "
+                SELECT 
+                    m.document, 
+                    m.name, 
+                    m.lastName, 
+                    m.mail, 
+                    m.phone, 
+                    m.photo,
+                    GROUP_CONCAT(fs.nameFieldStudy SEPARATOR ', ') AS fieldsOfStudy
+                FROM members m
+                LEFT JOIN membersFieldsOfStudy mfs ON m.document = mfs.members_document
+                LEFT JOIN fieldOfStudy fs ON mfs.fieldOfStudy_fieldOfStudyID = fs.fieldOfStudyID
+                ";
+            if ($serviceID !== null) {
+                $sql .= "
+                    INNER JOIN membersByServices mbs ON m.document = mbs.members_document
+                    WHERE m.userType = 'professional'
+                    AND m.memberStatus = 'E'
+                    AND mbs.serviceID = :serviceID
+                ";
+            } else {
+                $sql .= "
+                    WHERE m.userType = 'professional'
+                    AND m.memberStatus = 'E'
+                ";
+            }
+
+            $sql .= " GROUP BY m.document";
+
+            $stmt = $pdo->prepare($sql);
+
+            if ($serviceID !== null) {
+                $stmt->bindValue(':serviceID', $serviceID, PDO::PARAM_INT);
+            }
+
+            $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (\Throwable $th) {
             return ['error' => $th->getMessage()];
@@ -167,6 +189,32 @@ class membersRepository
         }catch (PDOException $e) {
             error_log("Error actualizando el empleado:" .json_encode($data, JSON_PRETTY_PRINT) . " - " . $e->getMessage());
             return json_encode(['success' => false, 'Message' => 'Error actualizando el empleado']);
+        }
+    }
+
+    public function getMemberByDocument(string $document): array
+    {
+        try {
+            $sql = '
+                SELECT 
+                    m.name,
+                    m.secondName,
+                    m.lastName,
+                    m.address,
+                    m.photo,
+                    r.roleName
+                FROM members m
+                INNER JOIN roles r ON m.roles_roleID = r.roleID
+                WHERE m.document = :document
+            ';
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':document', $document, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching member by document: " . $e->getMessage());
+            return ['success' => false, 'Message' => 'Error fetching member by document'];
         }
     }
 
