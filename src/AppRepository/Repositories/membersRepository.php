@@ -25,6 +25,7 @@ class membersRepository
                     m.mail, 
                     m.phone, 
                     m.photo,
+                    m.address,
                     GROUP_CONCAT(fs.nameFieldStudy SEPARATOR ', ') AS fieldsOfStudy
                 FROM members m
                 LEFT JOIN membersFieldsOfStudy mfs ON m.document = mfs.members_document
@@ -71,11 +72,11 @@ class membersRepository
             if ($empleado) {
                 return json_encode(['success' => true, 'data' => $empleado]);
             } else {
-                return json_encode(['success' => false, 'Message' => 'Empleado no encontrado']);
+                return json_encode(['success' => false, 'message' => 'Empleado no encontrado']);
             }
         } catch (PDOException $e) {
             error_log("Error consultando el empleado: " . $id . " - " . $e->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error consultando el empleado']);
+            return json_encode(['success' => false, 'message' => 'Error consultando el empleado']);
         }
     }
 
@@ -182,17 +183,17 @@ class membersRepository
             $stmt->bindValue(':idEmpleado', $data['IdEmpleado'], PDO::PARAM_INT);
             $stmt->execute();
             if ($stmt->rowCount() > 0) {
-                return json_encode(['success' => true, 'Message' => 'Actualización exitosa']);
+                return json_encode(['success' => true, 'message' => 'Actualización exitosa']);
             } else {
-                return json_encode(['success' => false, 'Message' => 'No se realizaron cambios o no se encontró el registro.']);
+                return json_encode(['success' => false, 'message' => 'No se realizaron cambios o no se encontró el registro.']);
             }
         }catch (PDOException $e) {
             error_log("Error actualizando el empleado:" .json_encode($data, JSON_PRETTY_PRINT) . " - " . $e->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error actualizando el empleado']);
+            return json_encode(['success' => false, 'message' => 'Error actualizando el empleado']);
         }
     }
 
-    public function getMemberByDocument(string $document): array
+    public function getMemberByDocument(int $document): array
     {
         try {
             $sql = '
@@ -209,12 +210,12 @@ class membersRepository
             ';
             $pdo = $this->dataBase->GetConnection();
             $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':document', $document, PDO::PARAM_STR);
+            $stmt->bindValue(':document', $document, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Error fetching member by document: " . $e->getMessage());
-            return ['success' => false, 'Message' => 'Error fetching member by document'];
+            return ['success' => false, 'message' => 'Error fetching member by document'];
         }
     }
 

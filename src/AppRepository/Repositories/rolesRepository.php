@@ -24,7 +24,7 @@ class RolesRepository
             ");
             return json_encode($stmt->fetchAll(PDO::FETCH_ASSOC)); 
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'Message' => 'Error obteniendo la lista de roles', 'log' => $th->getMessage()]);
+            return json_encode(['success' => false, 'message' => 'Error obteniendo la lista de roles', 'log' => $th->getMessage()]);
         }
     }
 
@@ -44,10 +44,10 @@ class RolesRepository
             if ($role) {
                 return json_encode(['success' => true, 'data' => $role]);
             } else {
-                return json_encode(['success' => false, 'Message' => 'Rol no encontrado']);
+                return json_encode(['success' => false, 'message' => 'Rol no encontrado']);
             }
         } catch (\Throwable $th) {
-            return json_encode(['success' => false, 'Message' => 'Error consultando el rol', 'log' => $th->getMessage()]);
+            return json_encode(['success' => false, 'message' => 'Error consultando el rol', 'log' => $th->getMessage()]);
         }
     }
 
@@ -67,10 +67,10 @@ class RolesRepository
             if ($role) {
                 return ['success' => true, 'data' => $role];
             } else {
-                return ['success' => false, 'Message' => 'Rol no encontrado'];
+                return ['success' => false, 'message' => 'Rol no encontrado'];
             }
         } catch (\Throwable $th) {
-            return ['success' => false, 'Message' => 'Error consultando el rol', 'log' => $th->getMessage()];
+            return ['success' => false, 'message' => 'Error consultando el rol', 'log' => $th->getMessage()];
         }
     }
 

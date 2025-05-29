@@ -39,10 +39,10 @@ class sheduleRepository
             $stmt->bindValue(':days_dayID', $day, PDO::PARAM_INT);
             $stmt->bindValue(':member_document', $data['member_document'], PDO::PARAM_INT);
             $stmt->execute();    
-            return json_encode(['success' => true, 'Message' => 'Horario asignado correctamente']);
+            return json_encode(['success' => true, 'message' => 'Horario asignado correctamente']);
         } catch (\Throwable $th) {
             error_log("Error asignando horario: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error asignando horario']);
+            return json_encode(['success' => false, 'message' => 'Error asignando horario']);
         }
     }
 
@@ -52,6 +52,19 @@ class sheduleRepository
             $pdo = $this->dataBase->GetConnection();
             $stmt = $pdo->prepare("SELECT * FROM schedule WHERE member_document = :document AND available = 1");
             $stmt->bindValue(':document', $document, PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Throwable $th) {
+            return ['error' => $th->getMessage()];
+        }
+    }
+
+    public function getSheduleByPrimaryKey(int $id): array
+    {
+        try {
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare("SELECT * FROM schedule WHERE scheduleID = :id");
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (\Throwable $th) {

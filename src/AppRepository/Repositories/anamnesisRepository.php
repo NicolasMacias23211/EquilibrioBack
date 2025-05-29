@@ -55,11 +55,11 @@ class anamnesisRepository
             if ($anamnesis) {
                 return json_encode(['success' => true, 'data' => $anamnesis]);
             } else {
-                return json_encode(['success' => false, 'Message' => 'Anamnesis no encontrada']);
+                return json_encode(['success' => false, 'message' => 'Anamnesis no encontrada']);
             }
         } catch (PDOException $e) {
             error_log("Error consultando la anamnesis: " . $id . " - " . $e->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error consultando la anamnesis']);
+            return json_encode(['success' => false, 'message' => 'Error consultando la anamnesis']);
         }
     }
 
@@ -97,10 +97,10 @@ class anamnesisRepository
             
             $lastInsertId = $pdo->lastInsertId();
             
-            return ['success' => true, 'Message' => 'Anamnesis creada correctamente', 'id' => $lastInsertId];
+            return ['success' => true, 'message' => 'Anamnesis creada correctamente', 'id' => $lastInsertId];
         } catch (PDOException $e) {
             error_log("Error creando la anamnesis: " . $e->getMessage());
-            return ['success' => false, 'Message' => 'Error creando la anamnesis'];
+            return ['success' => false, 'message' => 'Error creando la anamnesis'];
         }
     }
 

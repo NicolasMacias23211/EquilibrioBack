@@ -52,4 +52,28 @@ class ServicesRepository
         }
     }
 
+    public function getServiceById(int $serviceID): array | null
+    {
+        try {
+            $sql = '
+                SELECT 
+                    s.serviceID,
+                    s.serviceName,
+                    s.serviceDescription
+                FROM 
+                    services s
+                WHERE 
+                    s.serviceID = :serviceID
+            ';
+            $pdo = $this->dataBase->GetConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindValue(':serviceID', $serviceID, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching service by ID: " . $e->getMessage());
+            return null;
+        }
+    }
+
 }

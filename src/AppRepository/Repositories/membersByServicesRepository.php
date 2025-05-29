@@ -30,10 +30,10 @@ class membersByServicesRepository
             $stmt->bindValue(':serviceID', $data['serviceID'], PDO::PARAM_INT);
             $stmt->bindValue(':servicePackagesID', $data['servicePackagesID'], PDO::PARAM_INT);
             $stmt->execute();
-            return json_encode(['success' => true, 'Message' => 'Miembro asignado a servicio correctamente']);
+            return json_encode(['success' => true, 'message' => 'Miembro asignado a servicio correctamente']);
         } catch (\Throwable $th) {
             error_log("Error asignando miembro a servicio: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error asignando miembro a servicio']);
+            return json_encode(['success' => false, 'message' => 'Error asignando miembro a servicio']);
         }
     }
 
@@ -90,10 +90,10 @@ class membersByServicesRepository
             $stmt->bindValue(':serviceID', $data['serviceID'], PDO::PARAM_INT);
             $stmt->bindValue(':servicePackagesID', $data['servicePackagesID'], PDO::PARAM_INT);
             $stmt->execute();
-            return json_encode(['success' => true, 'Message' => 'Miembro asignado a servicio actualizado correctamente']);
+            return json_encode(['success' => true, 'message' => 'Miembro asignado a servicio actualizado correctamente']);
         } catch (\Throwable $th) {
             error_log("Error actualizando miembro asignado a servicio: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error actualizando miembro asignado a servicio']);
+            return json_encode(['success' => false, 'message' => 'Error actualizando miembro asignado a servicio']);
         }
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 use AppControllers\controllers\membersController;
 use AppControllers\controllers\AuthenticationController;
 use AppControllers\controllers\ServicesController;
+use AppControllers\controllers\AppointmentController;
 use AppControllers\controllers\ScheduleController;
 use Redoc\Redoc;
 use Slim\Factory\AppFactory;
@@ -43,6 +44,9 @@ $app->post('/createProfessional' ,membersController::class.':CreateProfessional'
 $app->get('/members/{document}', membersController::class.':getMemberByDocument');
 $app->post('/autenticacion', AuthenticationController::class.':validarCredenciales');
 $app->post('/createMember', membersController::class.':createNewMember');
+$app->post('/createAppointment', AppointmentController::class.':createAppointment');
+$app->get('/appointments', AppointmentController::class.':getAllAppointments');
+$app->delete('/appointments/{appointmentId}', AppointmentController::class.':cancelAppointmentById');
 $app->get('/servicios', ServicesController::class.':getAllServices');
 $app->get('/schedule/{document}', [ScheduleController::class, 'getScheduleByPerson']);
 

@@ -231,6 +231,7 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
+
 -- -----------------------------------------------------
 -- Table `inhala`.`scheduledAppointments`
 -- -----------------------------------------------------
@@ -238,6 +239,7 @@ CREATE TABLE IF NOT EXISTS `inhala`.`scheduledAppointments` (
   `scheduledAppointmentID` INT NOT NULL AUTO_INCREMENT,
   `address` VARCHAR(45) NULL,
   `notes` VARCHAR(150) NULL,
+  `date` DATE NOT NULL,
   `isHomeService` TINYINT NOT NULL DEFAULT 0,
   `MembersDocument` BIGINT NOT NULL,
   `professionalDocument` BIGINT NOT NULL,

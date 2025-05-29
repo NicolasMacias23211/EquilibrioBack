@@ -29,10 +29,10 @@ class MembersFieldsOfStudyRepository
             $stmt->bindValue(':members_document', $data['members_document'], PDO::PARAM_STR);
             $stmt->bindValue(':fieldOfStudy_fieldOfStudyID', $data['fieldOfStudy_fieldOfStudyID'], PDO::PARAM_INT);
             $stmt->execute();
-            return json_encode(['success' => true, 'Message' => 'Campo de estudio asignado correctamente']);
+            return json_encode(['success' => true, 'message' => 'Campo de estudio asignado correctamente']);
         } catch (\Throwable $th) {
             error_log("Error asignando campo de estudio: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error asignando campo de estudio']);
+            return json_encode(['success' => false, 'message' => 'Error asignando campo de estudio']);
         }
     }
 

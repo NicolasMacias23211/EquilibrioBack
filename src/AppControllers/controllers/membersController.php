@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace AppControllers\controllers;
 
 use AppRepository\Repositories\membersRepository;
@@ -58,7 +59,7 @@ class membersController
         //se valida que el campo de estudio exista
         $IdFieldStudy = $this->fieldOfStudyRepository->getFieldOfStudyByName($body['nameFieldStudy']);
         if (empty($IdFieldStudy)) {
-            $response->getBody()->write(json_encode(['success' => false, 'Message' => 'El campo de estudio especificado no es válido']));
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'El campo de estudio especificado no es válido']));
             return $response->withStatus(422);
         }
 
@@ -72,7 +73,7 @@ class membersController
         }
 
         if (!$rol['success']) {
-            $response->getBody()->write(json_encode(['success' => false, 'Message' => 'El rol especificado no es válido']));
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'El rol especificado no es válido']));
             return $response->withStatus(422);
         }
 
@@ -82,7 +83,7 @@ class membersController
         $Ismemberinserted = $this->membersRepository->createMembers($body);
 
         if (!$Ismemberinserted['success']) {
-            $response->getBody()->write(json_encode(['success' => false, 'Message' => $Ismemberinserted['message']]));
+            $response->getBody()->write(json_encode(['success' => false, 'message' => $Ismemberinserted['message']]));
             return $response->withStatus(500);
         }
 
@@ -97,7 +98,7 @@ class membersController
             // se obtiene el dia especificado
             $day = $this->daysRepository->getDayByName($agenda['dayName']);
             if (empty($day)) {
-                $response->getBody()->write(json_encode(['success' => false, 'Message' => 'El día especificado no es válido']));
+                $response->getBody()->write(json_encode(['success' => false, 'message' => 'El día especificado no es válido']));
                 return $response->withStatus(422);
             }
             $agenda['member_document'] = $id;
@@ -141,7 +142,7 @@ class membersController
         }
 
         if (!$rol['success']) {
-            $response->getBody()->write(json_encode(['success' => false, 'Message' => 'El rol especificado no es válido']));
+            $response->getBody()->write(json_encode(['success' => false, 'message' => 'El rol especificado no es válido']));
             return $response->withStatus(422);
         }
 
@@ -151,7 +152,7 @@ class membersController
 
         $anamnesis = $this->anamnesisRepository->createNewAnamnesis($body);
         if (!$anamnesis['success']) {
-            $response->getBody()->write(json_encode(['success' => false, 'Message' => $anamnesis['message']]));
+            $response->getBody()->write(json_encode(['success' => false, 'message' => $anamnesis['message']]));
             return $response->withStatus(500);
         }
 
@@ -160,7 +161,7 @@ class membersController
         $Ismemberinserted = $this->membersRepository->createMembers($body);
 
         if (!$Ismemberinserted['success']) {
-            $response->getBody()->write(json_encode(['success' => false, 'Message' => $Ismemberinserted['message']]));
+            $response->getBody()->write(json_encode(['success' => false, 'message' => $Ismemberinserted['message']]));
             return $response->withStatus(500);
         }
 
@@ -179,6 +180,7 @@ class membersController
 
     public function getMemberByDocument(Request $request, Response $response, string $document): response
     {
+        $document = (int)$document;
         $member = $this->membersRepository->getMemberByDocument($document);
         $response->getBody()->write(json_encode($member));
         return $response;

@@ -29,10 +29,10 @@ class fieldOfStudyRepository
             $stmt->bindValue(':nameFieldStudy', $data['nameFieldStudy'], PDO::PARAM_STR);
             $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
             $stmt->execute();
-            return json_encode(['success' => true, 'Message' => 'Campo de estudio creado correctamente']);
+            return json_encode(['success' => true, 'message' => 'Campo de estudio creado correctamente']);
         } catch (\Throwable $th) {
             error_log("Error creando campo de estudio: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error creando campo de estudio']);
+            return json_encode(['success' => false, 'message' => 'Error creando campo de estudio']);
         }
     }
 
@@ -67,10 +67,10 @@ class fieldOfStudyRepository
             $stmt->bindValue(':description', $data['description'], PDO::PARAM_STR);
             $stmt->bindValue(':fieldOfStudyID', $data['fieldOfStudyID'], PDO::PARAM_INT);
             $stmt->execute();
-            return json_encode(['success' => true, 'Message' => 'Campo de estudio actualizado correctamente']);
+            return json_encode(['success' => true, 'message' => 'Campo de estudio actualizado correctamente']);
         } catch (\Throwable $th) {
             error_log("Error actualizando campo de estudio: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error actualizando campo de estudio']);
+            return json_encode(['success' => false, 'message' => 'Error actualizando campo de estudio']);
         }
     }
 

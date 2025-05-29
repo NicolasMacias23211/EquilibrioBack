@@ -17,6 +17,7 @@ INSERT INTO `inhala`.`fieldOfStudy` (`nameFieldStudy`, `description`) VALUES
 
 INSERT INTO `inhala`.`appointmentStatus` (`status`, `description`) VALUES
 ('nueva', 'Cita nueva'),
+('cancelada', 'Cancelada'),
 ('pendiente', 'Cita pendiente'),
 ('confirmada', 'Cita confirmada'),
 ('finalizada', 'Cita finalizada'),

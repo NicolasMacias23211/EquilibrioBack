@@ -26,10 +26,10 @@ class daysRepository
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(':dayName', $data['dayName'], PDO::PARAM_STR);
             $stmt->execute();
-            return json_encode(['success' => true, 'Message' => 'Dia creado correctamente']);
+            return json_encode(['success' => true, 'message' => 'Dia creado correctamente']);
         } catch (\Throwable $th) {
             error_log("Error creando dia: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error creando dia']);
+            return json_encode(['success' => false, 'message' => 'Error creando dia']);
         }
     }
 
@@ -82,10 +82,10 @@ class daysRepository
             $stmt->bindValue(':dayName', $data['dayName'], PDO::PARAM_STR);
             $stmt->bindValue(':dayID', $data['dayID'], PDO::PARAM_INT);
             $stmt->execute();
-            return json_encode(['success' => true, 'Message' => 'Dia actualizado correctamente']);
+            return json_encode(['success' => true, 'message' => 'Dia actualizado correctamente']);
         } catch (\Throwable $th) {
             error_log("Error actualizando dia: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error actualizando dia']);
+            return json_encode(['success' => false, 'message' => 'Error actualizando dia']);
         }
     }
 
@@ -97,10 +97,10 @@ class daysRepository
             $stmt = $pdo->prepare($sql);
             $stmt->bindValue(':dayID', $dayId, PDO::PARAM_INT);
             $stmt->execute();
-            return json_encode(['success' => true, 'Message' => 'Dia eliminado correctamente']);
+            return json_encode(['success' => true, 'message' => 'Dia eliminado correctamente']);
         } catch (\Throwable $th) {
             error_log("Error eliminando dia: " . $th->getMessage());
-            return json_encode(['success' => false, 'Message' => 'Error eliminando dia']);
+            return json_encode(['success' => false, 'message' => 'Error eliminando dia']);
         }
     }
 }
